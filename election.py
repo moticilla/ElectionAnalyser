@@ -6,7 +6,6 @@ class Election:
 
     def __init__(self, layout: list[int]):
         self.layout = np.array(layout)
-        self.players_at_space = {}
         self.space_of_player = {}
         # Assign players numbers
         player = 0
@@ -16,8 +15,7 @@ class Election:
                 for _ in range(players_at_space):
                     self.space_of_player[player] = space
                     player += 1
-                self.players_at_space[space] = players_at_space
-        self.no_players = len(self.players_at_space.keys())
+        self.no_players = player + 1
 
     @classmethod
     def create_from_string(self, str_layout: str):
@@ -65,12 +63,18 @@ class Election:
         space_payoffs[cur_player_bundle] += current_value
         return space_payoffs
     
+    def move_player(self, player, new_space):
+        old_space = self.space_of_player[player]
+        self.layout[old_space] -= 1
+        self.layout[new_space] += 1
+        self.space_of_player[player] = new_space
+    
     def get_player_payoffs(self):
         space_payoffs = self.get_space_payoffs()
         player_payoffs = {}
         for player, space in self.space_of_player.items():
             player_payoffs[player] = (space_payoffs[space] /
-                                      self.players_at_space[space])
+                                      self.layout[space])
         return player_payoffs
     
     def compute_and_print_payoffs(self):
