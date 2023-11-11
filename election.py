@@ -1,5 +1,7 @@
 
 import numpy as np
+import random
+from typing import Self
 
 
 class Election:
@@ -77,6 +79,29 @@ class Election:
                                       self.layout[space])
         return player_payoffs
     
+    def check_equilibrium(self):
+        equilibrium = True
+
+        for player in self.space_of_player.keys():
+            current_position = self.space_of_player[player]
+            current_payoff = self.get_player_payoffs()[player]
+
+            for space in range(len(self.layout)):
+                # Create a new Election object for each iteration (do we strictly need to create a new one, or could we just store the original and restore when needed?)
+                new_election = Election(self.layout.copy())
+                new_election.space_of_player = self.space_of_player.copy()
+
+                # Move the player to the new space
+                new_election.move_player(player, space)
+
+                new_payoff = new_election.get_player_payoffs()[player]
+
+                if new_payoff > current_payoff:
+                    equilibrium = False
+                    break  # No need to continue checking other spaces
+
+        return equilibrium
+
     def compute_and_print_payoffs(self):
         # We shouldn't compute each time, but alas
         player_payoffs = self.get_player_payoffs()
@@ -91,5 +116,40 @@ class Election:
         for num in self.layout:
             str_layout += str(num) + " "
         return str_layout
+    
+    @classmethod
+    def find_equilibrium(self, num_players, num_spaces, max_attempts=1000):
+        """
+        Attempt to find an equilibirum through random placement. Fails after a specified number of maximum attempts.
+        """
+        for _ in range(max_attempts):
+            # Create an initial layout with no players
+            initial_layout = [0] * num_spaces
+
+            # Place players randomly in the initial layout (so this random placement could have duplicates?)
+            players_positions = random.sample(range(num_spaces), num_players)
+            for position in players_positions:
+                initial_layout[position] += 1
+
+            # Create an Election object with the initial layout
+            election = Election(initial_layout)
+
+            # Check for equilibrium
+            is_equilibrium = election.check_equilibrium()
+
+            if is_equilibrium:
+                return is_equilibrium, election
+
+        # If no equilibrium is found after max_attempts, return False, and a None Election
+        return False, None
+    
+    @classmethod
+    def print_equilibrium(self, equilibrium_exists, election : Self):
+        if equilibrium_exists:
+            print("Is Equilibrium:", equilibrium_exists)
+            print("Final Layout:", election)
+            print("Player Payoffs:", election.get_player_payoffs())
+        else:
+            print("No equilibrium found after max attempts.")
 
 
