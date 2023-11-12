@@ -2,6 +2,7 @@
 import numpy as np
 import random
 from typing import Self
+from itertools import combinations_with_replacement
 
 
 class Election:
@@ -118,21 +119,16 @@ class Election:
         return str_layout
     
     @classmethod
-    def find_equilibrium(self, num_players, num_spaces, max_attempts=1000):
+    def random_find_equilibrium(self, num_players, num_spaces, max_attempts=1000):
         """
         Attempt to find an equilibirum through random placement. Fails after a specified number of maximum attempts.
         """
         for _ in range(max_attempts):
-            # Create an initial layout with no players
-            initial_layout = [0] * num_spaces
-
             # Place players randomly in the initial layout (so this random placement could have duplicates?)
             players_positions = random.sample(range(num_spaces), num_players)
-            for position in players_positions:
-                initial_layout[position] += 1
 
             # Create an Election object with the initial layout
-            election = Election(initial_layout)
+            election = Election.create_from_count_and_positions(num_spaces, players_positions)
 
             # Check for equilibrium
             is_equilibrium = election.check_equilibrium()
@@ -142,6 +138,44 @@ class Election:
 
         # If no equilibrium is found after max_attempts, return False, and a None Election
         return False, None
+    
+    @classmethod
+    def thorough_find_equilibrium(self, num_players, num_spaces):
+        """
+        Find an equilibrium in the specified setting.
+        """
+        for players_positions in combinations_with_replacement(range(num_spaces), num_players):
+            election = Election.create_from_count_and_positions(num_spaces, players_positions)
+
+            # Check for equilibrium
+            is_equilibrium = election.check_equilibrium()
+
+            if is_equilibrium:
+                return is_equilibrium, election
+
+        # If no equilibrium is found after max_attempts, return False, and a None Election
+        return False, None
+    
+    @classmethod
+    def thorough_find_all_equilibria(self, num_players, num_spaces):
+        """
+        Find all equilibria in the specified setting.
+        """
+        equilibria = []
+        for players_positions in combinations_with_replacement(range(num_spaces), num_players):
+            election = Election.create_from_count_and_positions(num_spaces, players_positions)
+
+            # Check for equilibrium
+            is_equilibrium = election.check_equilibrium()
+
+            if is_equilibrium:
+                equilibria.append(election)
+
+        # If no equilibrium is found after max_attempts, return False, and a None Election
+        if equilibria:
+            return True, equilibria
+        else:
+            return False, None
     
     @classmethod
     def print_equilibrium(self, equilibrium_exists, election : Self):
