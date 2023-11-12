@@ -184,5 +184,16 @@ class Election:
             print("Player Payoffs:", election.get_player_payoffs())
         else:
             print("No equilibrium found after max attempts.")
+            
+            
+    @classmethod
+    def print_all_equilibria(self, players, spaces):
+        found_any, equilibria = Election.thorough_find_all_equilibria(players,spaces)
 
+        if found_any:
+            print(f"Equilibria for {players} players and {spaces} spaces:")
+            for equi in equilibria:
+                print(equi)
+        else:
+            print(f"There are no equilibria for {players} players and {spaces} spaces.")
 
