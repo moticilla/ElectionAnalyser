@@ -1,7 +1,6 @@
 
 import numpy as np
 import random
-from typing import Self
 from itertools import combinations_with_replacement
 
 
@@ -178,7 +177,7 @@ class Election:
             return False, None
     
     @classmethod
-    def print_equilibrium(self, equilibrium_exists, election : Self):
+    def print_equilibrium(self, equilibrium_exists, election):
         if equilibrium_exists:
             print("Is Equilibrium:", equilibrium_exists)
             print("Final Layout:", election)
