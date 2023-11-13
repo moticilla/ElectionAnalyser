@@ -31,6 +31,8 @@ class Election:
     def combine_elections(self, election1, election2):
         combelec = str(election1) + str(election2)
         return Election.create_from_string(combelec)
+    
+    
 
     @classmethod
     def create_from_count_and_positions(self, count, positions):
