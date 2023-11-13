@@ -6,7 +6,7 @@ from itertools import combinations_with_replacement
 
 class Election:
 
-    def __init__(self, layout: list[int]):
+    def __init__(self, layout):
         self.layout = np.array(layout)
         self.space_of_player = {}
         # Assign players numbers
@@ -22,6 +22,7 @@ class Election:
     @classmethod
     def create_from_string(self, str_layout: str):
         layout = []
+        str_layout = str_layout.replace(" ", "")
         for char in str_layout:
             layout.append(int(char))
         return Election(layout)

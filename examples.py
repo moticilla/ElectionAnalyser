@@ -20,3 +20,5 @@ equilibrium_exists, election = Election.find_equilibrium(num_players, num_spaces
 Election.print_equilibrium(*Election.find_equilibrium(2,4))
 
 Election.print_equilibrium(*Election.find_equilibrium(3,9))
+
+Election.create_from_string("0 1 1 0")

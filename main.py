@@ -9,7 +9,7 @@ print(election.check_equilibrium())
 
 s = 1
 while True:
-    Election.print_all_equilibria(12,s)
+    Election.print_all_equilibria(6,s)
     s += 1
 
 #print_all_equilibria(3,4)
