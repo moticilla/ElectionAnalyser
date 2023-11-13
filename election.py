@@ -126,6 +126,11 @@ class Election:
         return str_layout
     
     @classmethod
+    def check_equilibrium_from_string(self, layout: str):
+        election = Election.create_from_string(layout)
+        return election.check_equilibrium()
+    
+    @classmethod
     def random_find_equilibrium(self, num_players, num_spaces, max_attempts=1000):
         """
         Attempt to find an equilibirum through random placement. Fails after a specified number of maximum attempts.
