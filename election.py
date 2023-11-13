@@ -28,11 +28,11 @@ class Election:
         return Election(layout)
     
     @classmethod
-    def combine_elections(self, election1, election2):
-        combelec = str(election1) + str(election2)
-        return Election.create_from_string(combelec)
-    
-    
+    def combine_elections(self, *elections):
+        elecstr = ""
+        for x in elections:
+            elecstr += (str(x))
+        return Election.create_from_string(elecstr)
 
     @classmethod
     def create_from_count_and_positions(self, count, positions):
