@@ -28,6 +28,11 @@ class Election:
         return Election(layout)
     
     @classmethod
+    def combine_elections(self, election1, election2):
+        combelec = str(election1) + str(election2)
+        return Election.create_from_string(combelec)
+
+    @classmethod
     def create_from_count_and_positions(self, count, positions):
         # positions should be 0 indexed
         from collections import Counter
@@ -197,4 +202,3 @@ class Election:
                 print(equi)
         else:
             print(f"There are no equilibria for {players} players and {spaces} spaces.")
-
