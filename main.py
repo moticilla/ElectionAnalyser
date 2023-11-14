@@ -1,4 +1,5 @@
 from election import Election
+from copy import deepcopy
 
 election = Election.create_from_string("1231")
 print(election.check_equilibrium())
@@ -84,4 +85,35 @@ A = "0110"
 B = "001100"
 print(Election.combine_elections(e(B), e(B), e(B), e(B)).check_equilibrium())
 
-print_all_equilibria_for_any_players(10)
+
+def can_reduce(e: Election):
+    for player in e.space_of_player.keys():
+        new_e = deepcopy(e)
+        new_e.no_players -= 1
+        pos = new_e.space_of_player.pop(player)
+        new_e.layout[pos] -= 1
+        if new_e.check_equilibrium():
+            print("blom")
+            print(new_e)
+            return new_e
+    print("Nothing found..")
+    return None
+
+
+def reduce_equilibrium_checker(layout: str):
+    e = Election.create_from_string(layout)
+    print(e.check_equilibrium())
+    for i in range(len(e.layout)):
+        potential_e = can_reduce(e)
+        if potential_e is not None:
+            e = potential_e
+
+
+reduce_equilibrium_checker("111111111")
+reduce_equilibrium_checker("11111111111")
+reduce_equilibrium_checker("0 0 1 1 0 0 0 2 0 0 0 1 1 0 0")
+reduce_equilibrium_checker("1 1 1 1 0 2 0 1 1 1")
+reduce_equilibrium_checker("0 2 0 0 1 0 0 1 1 0")
+
+
+# print_all_equilibria_for_any_players(10)
